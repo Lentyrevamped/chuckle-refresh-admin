@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { AdminLogin } from "@/components/AdminLogin";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,14 @@ const Admin = () => {
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="container max-w-4xl py-8 space-y-8 animate-fade-up">
+        <div className="fixed top-4 left-4">
+          <Link to="/">
+            <Button variant="ghost" className="button-hover">
+              Back to Main Site
+            </Button>
+          </Link>
+        </div>
+
         <div className="glass-card p-8 rounded-xl space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight">Add New Joke</h2>
