@@ -37,53 +37,55 @@ const Admin = () => {
   }
 
   return (
-    <div className="container py-8 space-y-8 animate-fade-up">
-      <div className="glass-card p-8 rounded-xl space-y-6">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight">Add New Joke</h2>
-          <p className="text-muted-foreground">Create a new joke to add to the collection</p>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="container max-w-4xl py-8 space-y-8 animate-fade-up">
+        <div className="glass-card p-8 rounded-xl space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold tracking-tight">Add New Joke</h2>
+            <p className="text-muted-foreground">Create a new joke to add to the collection</p>
+          </div>
+          <div className="space-y-4">
+            <Input
+              placeholder="Setup"
+              value={setup}
+              onChange={(e) => setSetup(e.target.value)}
+            />
+            <Input
+              placeholder="Punchline"
+              value={punchline}
+              onChange={(e) => setPunchline(e.target.value)}
+            />
+            <Button onClick={handleAddJoke} className="w-full button-hover">
+              Add Joke
+            </Button>
+          </div>
         </div>
-        <div className="space-y-4">
-          <Input
-            placeholder="Setup"
-            value={setup}
-            onChange={(e) => setSetup(e.target.value)}
-          />
-          <Input
-            placeholder="Punchline"
-            value={punchline}
-            onChange={(e) => setPunchline(e.target.value)}
-          />
-          <Button onClick={handleAddJoke} className="w-full button-hover">
-            Add Joke
-          </Button>
-        </div>
-      </div>
 
-      <div className="glass-card p-8 rounded-xl space-y-6">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight">Manage Jokes</h2>
-          <p className="text-muted-foreground">View and delete existing jokes</p>
-        </div>
-        <div className="space-y-4">
-          {jokes.map((joke: Joke) => (
-            <div
-              key={joke.id}
-              className="p-4 bg-secondary rounded-lg flex justify-between items-center"
-            >
-              <div>
-                <p className="font-medium">{joke.setup}</p>
-                <p className="text-sm text-muted-foreground">{joke.punchline}</p>
-              </div>
-              <Button
-                variant="destructive"
-                onClick={() => handleDeleteJoke(joke.id)}
-                className="button-hover"
+        <div className="glass-card p-8 rounded-xl space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold tracking-tight">Manage Jokes</h2>
+            <p className="text-muted-foreground">View and delete existing jokes</p>
+          </div>
+          <div className="space-y-4">
+            {jokes.map((joke: Joke) => (
+              <div
+                key={joke.id}
+                className="p-4 bg-secondary rounded-lg flex justify-between items-center"
               >
-                Delete
-              </Button>
-            </div>
-          ))}
+                <div>
+                  <p className="font-medium">{joke.setup}</p>
+                  <p className="text-sm text-muted-foreground">{joke.punchline}</p>
+                </div>
+                <Button
+                  variant="destructive"
+                  onClick={() => handleDeleteJoke(joke.id)}
+                  className="button-hover"
+                >
+                  Delete
+                </Button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -8,38 +8,47 @@ interface AdminLoginProps {
 }
 
 export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
 
   const handleLogin = () => {
-    if (password === "admin123") {
+    if (username === "Lenty" && password === "CTDL0417") {
       onLogin();
     } else {
       toast({
-        title: "Invalid password",
-        description: "Please try again",
+        title: "Invalid credentials",
+        description: "Please check your username and password",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <div className="glass-card w-full max-w-md p-8 rounded-xl animate-fade-up">
-      <div className="space-y-6">
-        <div className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight">Admin Login</h2>
-          <p className="text-muted-foreground">Enter the admin password to continue</p>
-        </div>
-        <div className="space-y-4">
-          <Input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <Button onClick={handleLogin} className="w-full button-hover">
-            Login
-          </Button>
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="glass-card w-full max-w-md p-8 rounded-xl animate-fade-up">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold tracking-tight">Admin Login</h2>
+            <p className="text-muted-foreground">Enter your credentials to continue</p>
+          </div>
+          <div className="space-y-4">
+            <Input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <Button onClick={handleLogin} className="w-full button-hover">
+              Login
+            </Button>
+          </div>
         </div>
       </div>
     </div>
