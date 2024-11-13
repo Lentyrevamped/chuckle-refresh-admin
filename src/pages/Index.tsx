@@ -6,10 +6,27 @@ import { Link } from "react-router-dom";
 
 const Index = () => {
   const [joke, setJoke] = useState(getRandomJoke());
+  const [isAutoGenerating, setIsAutoGenerating] = useState(false);
 
   const refreshJoke = () => {
     setJoke(getRandomJoke());
   };
+
+  useEffect(() => {
+    let interval: number | undefined;
+    
+    if (isAutoGenerating) {
+      interval = setInterval(() => {
+        refreshJoke();
+      }, 5000) as unknown as number; // 5 seconds interval
+    }
+
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isAutoGenerating]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
@@ -30,6 +47,14 @@ const Index = () => {
         </div>
         
         <JokeCard joke={joke} onRefresh={refreshJoke} />
+
+        <Button 
+          variant="outline"
+          onClick={() => setIsAutoGenerating(!isAutoGenerating)}
+          className="button-hover"
+        >
+          {isAutoGenerating ? "Stop Auto Generate" : "Start Auto Generate"}
+        </Button>
       </div>
     </div>
   );
