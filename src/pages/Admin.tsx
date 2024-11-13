@@ -79,11 +79,14 @@ const Admin = () => {
             {jokes.map((joke: Joke) => (
               <div
                 key={joke.id}
-                className="p-4 bg-secondary rounded-lg flex justify-between items-center"
+                className={`p-4 ${joke.isUserGenerated ? 'bg-primary/10' : 'bg-secondary'} rounded-lg flex justify-between items-center`}
               >
                 <div>
                   <p className="font-medium">{joke.setup}</p>
                   <p className="text-sm text-muted-foreground">{joke.punchline}</p>
+                  {joke.isUserGenerated && (
+                    <span className="text-xs text-primary mt-1 block">Custom Joke</span>
+                  )}
                 </div>
                 <Button
                   variant="destructive"
