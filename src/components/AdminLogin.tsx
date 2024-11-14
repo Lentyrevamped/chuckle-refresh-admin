@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { validateUser } from "@/lib/users";
 
 interface AdminLoginProps {
-  onLogin: () => void;
+  onLogin: (username: string) => void;
 }
 
 export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
@@ -16,7 +16,7 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const handleLogin = () => {
     const { isValid, isAdmin } = validateUser(username, password);
     if (isValid && isAdmin) {
-      onLogin();
+      onLogin(username);
     } else {
       toast({
         title: "Invalid credentials",
