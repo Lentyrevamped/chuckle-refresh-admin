@@ -5,13 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { addJoke, getAllJokes, deleteJoke, type Joke } from "@/lib/jokes";
+import { addUser, getAllUsers } from "@/lib/users";
 
 const Admin = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [setup, setSetup] = useState("");
   const [punchline, setPunchline] = useState("");
+  const [newUsername, setNewUsername] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [isNewUserAdmin, setIsNewUserAdmin] = useState(false);
   const { toast } = useToast();
   const jokes = getAllJokes();
+  const users = getAllUsers();
 
   const handleAddJoke = () => {
     if (setup && punchline) {
@@ -22,6 +27,27 @@ const Admin = () => {
         title: "Joke added successfully",
         description: "Your joke has been added to the collection",
       });
+    }
+  };
+
+  const handleAddUser = () => {
+    if (newUsername && newPassword) {
+      try {
+        addUser(newUsername, newPassword, isNewUserAdmin);
+        setNewUsername("");
+        setNewPassword("");
+        setIsNewUserAdmin(false);
+        toast({
+          title: "User added successfully",
+          description: `New ${isNewUserAdmin ? "admin" : "regular"} user created`,
+        });
+      } catch (error) {
+        toast({
+          title: "Error adding user",
+          description: error instanceof Error ? error.message : "Unknown error occurred",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -50,6 +76,39 @@ const Admin = () => {
 
         <div className="glass-card p-8 rounded-xl space-y-6">
           <div className="space-y-2">
+            <h2 className="text-2xl font-semibold tracking-tight">Add New User</h2>
+            <p className="text-muted-foreground">Create a new user account</p>
+          </div>
+          <div className="space-y-4">
+            <Input
+              placeholder="Username"
+              value={newUsername}
+              onChange={(e) => setNewUsername(e.target.value)}
+            />
+            <Input
+              type="password"
+              placeholder="Password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isAdmin"
+                checked={isNewUserAdmin}
+                onChange={(e) => setIsNewUserAdmin(e.target.checked)}
+                className="rounded border-gray-300"
+              />
+              <label htmlFor="isAdmin">Admin access</label>
+            </div>
+            <Button onClick={handleAddUser} className="w-full button-hover">
+              Add User
+            </Button>
+          </div>
+        </div>
+
+        <div className="glass-card p-8 rounded-xl space-y-6">
+          <div className="space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight">Add New Joke</h2>
             <p className="text-muted-foreground">Create a new joke to add to the collection</p>
           </div>
@@ -67,6 +126,28 @@ const Admin = () => {
             <Button onClick={handleAddJoke} className="w-full button-hover">
               Add Joke
             </Button>
+          </div>
+        </div>
+
+        <div className="glass-card p-8 rounded-xl space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-semibold tracking-tight">Manage Users</h2>
+            <p className="text-muted-foreground">View existing users</p>
+          </div>
+          <div className="space-y-4">
+            {users.map((user) => (
+              <div
+                key={user.username}
+                className="p-4 bg-secondary rounded-lg flex justify-between items-center"
+              >
+                <div>
+                  <p className="font-medium">{user.username}</p>
+                  <span className="text-xs text-primary mt-1 block">
+                    {user.isAdmin ? "Admin User" : "Regular User"}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
+import { validateUser } from "@/lib/users";
 
 interface AdminLoginProps {
   onLogin: () => void;
@@ -13,7 +14,8 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
   const { toast } = useToast();
 
   const handleLogin = () => {
-    if (username === "Lenty" && password === "CTDL0417") {
+    const { isValid, isAdmin } = validateUser(username, password);
+    if (isValid && isAdmin) {
       onLogin();
     } else {
       toast({
