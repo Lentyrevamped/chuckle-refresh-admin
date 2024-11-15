@@ -1,15 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { JokeCard } from "@/components/JokeCard";
 import { Button } from "@/components/ui/button";
-import { getRandomJoke } from "@/lib/jokes";
+import { getRandomJoke, type Joke } from "@/lib/jokes";
 import { Link } from "react-router-dom";
 
 export const JokeDisplay = () => {
-  const [joke, setJoke] = useState(getRandomJoke());
+  const [joke, setJoke] = useState<Joke | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const refreshJoke = () => {
-    setJoke(getRandomJoke());
+  const refreshJoke = async () => {
+    setIsLoading(true);
+    try {
+      const newJoke = await getRandomJoke();
+      setJoke(newJoke);
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  useEffect(() => {
+    refreshJoke();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
@@ -29,7 +40,11 @@ export const JokeDisplay = () => {
           </p>
         </div>
         
-        <JokeCard joke={joke} onRefresh={refreshJoke} />
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          joke && <JokeCard joke={joke} onRefresh={refreshJoke} />
+        )}
       </div>
     </div>
   );
