@@ -1,51 +1,77 @@
+import { supabase } from './supabase';
+
 interface User {
   username: string;
   password: string;
   isAdmin: boolean;
 }
 
-let users: User[] = [
-  { username: "Lenty", password: "CTDL0417", isAdmin: true }
-];
+export const addUser = async (username: string, password: string, isAdmin: boolean) => {
+  const { data: existingUser } = await supabase
+    .from('users')
+    .select()
+    .eq('username', username)
+    .single();
 
-export const addUser = (username: string, password: string, isAdmin: boolean) => {
-  if (users.some(user => user.username === username)) {
+  if (existingUser) {
     throw new Error("Username already exists");
   }
-  users.push({ username, password, isAdmin });
+
+  const { error } = await supabase
+    .from('users')
+    .insert([{ username, password, isAdmin }]);
+
+  if (error) throw error;
 };
 
-export const validateUser = (username: string, password: string): { isValid: boolean; isAdmin: boolean } => {
-  const user = users.find(u => u.username === username && u.password === password);
+export const validateUser = async (username: string, password: string): Promise<{ isValid: boolean; isAdmin: boolean }> => {
+  const { data: user } = await supabase
+    .from('users')
+    .select()
+    .eq('username', username)
+    .eq('password', password)
+    .single();
+
   return {
     isValid: !!user,
     isAdmin: user?.isAdmin || false
   };
 };
 
-export const deleteUser = (username: string, requestingUser: string) => {
+export const deleteUser = async (username: string, requestingUser: string) => {
   if (requestingUser !== "Lenty") {
     throw new Error("Only Lenty can modify users");
   }
   if (username === "Lenty") {
     throw new Error("Cannot delete the main admin account");
   }
-  const index = users.findIndex(u => u.username === username);
-  if (index === -1) {
-    throw new Error("User not found");
-  }
-  users.splice(index, 1);
+
+  const { error } = await supabase
+    .from('users')
+    .delete()
+    .eq('username', username);
+
+  if (error) throw error;
 };
 
-export const changePassword = (username: string, newPassword: string, requestingUser: string) => {
+export const changePassword = async (username: string, newPassword: string, requestingUser: string) => {
   if (requestingUser !== "Lenty") {
     throw new Error("Only Lenty can modify users");
   }
-  const user = users.find(u => u.username === username);
-  if (!user) {
-    throw new Error("User not found");
-  }
-  user.password = newPassword;
+
+  const { error } = await supabase
+    .from('users')
+    .update({ password: newPassword })
+    .eq('username', username);
+
+  if (error) throw error;
 };
 
-export const getAllUsers = () => users;
+export const getAllUsers = async () => {
+  const { data: users, error } = await supabase
+    .from('users')
+    .select();
+
+  if (error) throw error;
+  return users as User[];
+};

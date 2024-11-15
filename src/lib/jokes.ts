@@ -1,28 +1,11 @@
+import { supabase } from './supabase';
+
 export interface Joke {
   id: string;
   setup: string;
   punchline: string;
   isUserGenerated?: boolean;
 }
-
-// Initial jokes
-const defaultJokes: Joke[] = [
-  {
-    id: "1",
-    setup: "Why don't programmers like nature?",
-    punchline: "It has too many bugs!",
-    isUserGenerated: false,
-  },
-  {
-    id: "2",
-    setup: "What do you call a bear with no teeth?",
-    punchline: "A gummy bear!",
-    isUserGenerated: false,
-  },
-];
-
-let jokes = [...defaultJokes];
-let usedJokes = new Set<string>();
 
 const generateRandomJoke = () => {
   const setup = `Why did the ${Math.random() < 0.5 ? 'developer' : 'programmer'} ${['quit', 'cross the road', 'go home'][Math.floor(Math.random() * 3)]}?`;
@@ -38,22 +21,27 @@ const generateRandomJoke = () => {
   };
 };
 
-export const getRandomJoke = (): Joke => {
+let usedJokes = new Set<string>();
+
+export const getRandomJoke = async (): Promise<Joke> => {
   // First, try to get a user-generated joke that hasn't been used
-  const userJokes = jokes.filter(joke => joke.isUserGenerated && !usedJokes.has(joke.id));
-  
-  // Then, try to get any joke that hasn't been used
-  const availableJokes = userJokes.length > 0 
-    ? userJokes 
-    : jokes.filter(joke => !usedJokes.has(joke.id));
+  const { data: jokes } = await supabase
+    .from('jokes')
+    .select();
+
+  const availableJokes = (jokes || []).filter(joke => !usedJokes.has(joke.id));
 
   // If we've used all jokes, generate a new one
   if (availableJokes.length === 0) {
     const newJoke = generateRandomJoke();
-    const id = (jokes.length + 1).toString();
-    const generatedJoke = { ...newJoke, id, isUserGenerated: false };
-    jokes.push(generatedJoke);
-    return generatedJoke;
+    const { data: insertedJoke, error } = await supabase
+      .from('jokes')
+      .insert([{ ...newJoke, isUserGenerated: false }])
+      .select()
+      .single();
+
+    if (error) throw error;
+    return insertedJoke;
   }
 
   // Get a random joke from available ones
@@ -62,21 +50,36 @@ export const getRandomJoke = (): Joke => {
   usedJokes.add(selectedJoke.id);
 
   // If all jokes have been used, reset the used jokes tracker
-  if (usedJokes.size === jokes.length) {
+  if (usedJokes.size === jokes?.length) {
     usedJokes.clear();
   }
 
   return selectedJoke;
 };
 
-export const addJoke = (joke: Omit<Joke, "id" | "isUserGenerated">) => {
-  const id = (jokes.length + 1).toString();
-  jokes.push({ ...joke, id, isUserGenerated: true });
+export const addJoke = async (joke: Omit<Joke, "id" | "isUserGenerated">) => {
+  const { error } = await supabase
+    .from('jokes')
+    .insert([{ ...joke, isUserGenerated: true }]);
+
+  if (error) throw error;
 };
 
-export const getAllJokes = (): Joke[] => jokes;
+export const getAllJokes = async (): Promise<Joke[]> => {
+  const { data: jokes, error } = await supabase
+    .from('jokes')
+    .select();
 
-export const deleteJoke = (id: string) => {
-  jokes = jokes.filter((joke) => joke.id !== id);
+  if (error) throw error;
+  return jokes;
+};
+
+export const deleteJoke = async (id: string) => {
+  const { error } = await supabase
+    .from('jokes')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
   usedJokes.delete(id);
 };

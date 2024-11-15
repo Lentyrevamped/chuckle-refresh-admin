@@ -11,18 +11,30 @@ interface WebsiteLoginProps {
 export const WebsiteLogin = ({ onLogin }: WebsiteLoginProps) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleLogin = () => {
-    const { isValid } = validateUser(username, password);
-    if (isValid) {
-      onLogin(username);
-    } else {
+  const handleLogin = async () => {
+    try {
+      setIsLoading(true);
+      const { isValid } = await validateUser(username, password);
+      if (isValid) {
+        onLogin(username);
+      } else {
+        toast({
+          title: "Invalid credentials",
+          description: "Please check your username and password",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
       toast({
-        title: "Invalid credentials",
-        description: "Please check your username and password",
+        title: "Error",
+        description: "An error occurred while logging in",
         variant: "destructive",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -49,8 +61,12 @@ export const WebsiteLogin = ({ onLogin }: WebsiteLoginProps) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <Button onClick={handleLogin} className="w-full button-hover">
-              Login
+            <Button 
+              onClick={handleLogin} 
+              className="w-full button-hover"
+              disabled={isLoading}
+            >
+              {isLoading ? "Logging in..." : "Login"}
             </Button>
           </div>
         </div>
