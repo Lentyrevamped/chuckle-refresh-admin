@@ -24,32 +24,30 @@ const generateRandomJoke = () => {
 let usedJokes = new Set<string>();
 
 export const getRandomJoke = async (): Promise<Joke> => {
-  // First, try to get a user-generated joke that hasn't been used
-  const { data: jokes } = await supabase
+  const { data: jokes, error } = await supabase
     .from('jokes')
-    .select();
+    .select('*');
+
+  if (error) throw error;
 
   const availableJokes = (jokes || []).filter(joke => !usedJokes.has(joke.id));
 
-  // If we've used all jokes, generate a new one
   if (availableJokes.length === 0) {
     const newJoke = generateRandomJoke();
-    const { data: insertedJoke, error } = await supabase
+    const { data: insertedJoke, error: insertError } = await supabase
       .from('jokes')
       .insert([{ ...newJoke, isUserGenerated: false }])
       .select()
       .single();
 
-    if (error) throw error;
+    if (insertError) throw insertError;
     return insertedJoke;
   }
 
-  // Get a random joke from available ones
   const randomIndex = Math.floor(Math.random() * availableJokes.length);
   const selectedJoke = availableJokes[randomIndex];
   usedJokes.add(selectedJoke.id);
 
-  // If all jokes have been used, reset the used jokes tracker
   if (usedJokes.size === jokes?.length) {
     usedJokes.clear();
   }
@@ -68,10 +66,10 @@ export const addJoke = async (joke: Omit<Joke, "id" | "isUserGenerated">) => {
 export const getAllJokes = async (): Promise<Joke[]> => {
   const { data: jokes, error } = await supabase
     .from('jokes')
-    .select();
+    .select('*');
 
   if (error) throw error;
-  return jokes;
+  return jokes || [];
 };
 
 export const deleteJoke = async (id: string) => {

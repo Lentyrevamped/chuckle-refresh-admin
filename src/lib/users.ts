@@ -67,11 +67,11 @@ export const changePassword = async (username: string, newPassword: string, requ
   if (error) throw error;
 };
 
-export const getAllUsers = async () => {
+export const getAllUsers = async (): Promise<User[]> => {
   const { data: users, error } = await supabase
     .from('users')
-    .select();
+    .select('*');
 
   if (error) throw error;
-  return users as User[];
+  return users || [];
 };
