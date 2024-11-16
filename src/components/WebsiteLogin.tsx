@@ -50,7 +50,7 @@ export const WebsiteLogin = ({ onLogin }: WebsiteLoginProps) => {
         <h1 className="text-4xl md:text-6xl font-bold gradient-text">
           Welcome to Chuckle
         </h1>
-        <p className="text-lg text-gray-400 max-w-xl mx-auto">
+        <p className="text-lg text-gray-200 max-w-xl mx-auto font-medium">
           Your daily dose of laughter, delivered with style
         </p>
       </div>
@@ -59,7 +59,7 @@ export const WebsiteLogin = ({ onLogin }: WebsiteLoginProps) => {
         <div className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight">Sign In</h2>
-            <p className="text-gray-400">
+            <p className="text-gray-200 font-medium">
               Enter your credentials to access the joke generator
             </p>
           </div>

@@ -24,8 +24,19 @@ export const getRandomJoke = async (): Promise<Joke> => {
     };
   }
 
-  const randomIndex = Math.floor(Math.random() * jokes.length);
-  return jokes[randomIndex];
+  // Instead of random selection, get the next joke in order
+  const currentOrder = localStorage.getItem('currentJokeOrder');
+  let nextIndex = 0;
+  
+  if (currentOrder) {
+    const currentIndex = jokes.findIndex(joke => joke.display_order === parseInt(currentOrder));
+    nextIndex = (currentIndex + 1) % jokes.length;
+  }
+  
+  const nextJoke = jokes[nextIndex];
+  localStorage.setItem('currentJokeOrder', nextJoke.display_order.toString());
+  
+  return nextJoke;
 };
 
 export const getAllJokes = async (): Promise<Joke[]> => {

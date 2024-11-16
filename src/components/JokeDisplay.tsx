@@ -3,6 +3,7 @@ import { JokeCard } from "@/components/JokeCard";
 import { Button } from "@/components/ui/button";
 import { getRandomJoke, type Joke } from "@/lib/jokes";
 import { Link } from "react-router-dom";
+import { Laugh } from "lucide-react";
 
 export const JokeDisplay = () => {
   const [joke, setJoke] = useState<Joke | null>(null);
@@ -33,11 +34,15 @@ export const JokeDisplay = () => {
       </div>
       
       <div className="space-y-8 text-center">
-        <div className="space-y-2">
-          <h1 className="text-4xl font-bold tracking-tight">Joke Generator</h1>
-          <p className="text-muted-foreground">
-            Click to reveal the punchline, then get a new joke!
-          </p>
+        <div className="space-y-4">
+          <div className="flex justify-center mb-6">
+            <div className="p-3 rounded-full bg-primary/10 text-primary animate-glow">
+              <Laugh className="w-12 h-12" />
+            </div>
+          </div>
+          <h1 className="text-4xl md:text-6xl font-bold gradient-text">
+            Chuckle
+          </h1>
         </div>
         
         {isLoading ? (

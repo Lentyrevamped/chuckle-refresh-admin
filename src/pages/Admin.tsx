@@ -23,7 +23,7 @@ const Admin = () => {
         <Link to="/">
           <Button variant="ghost" className="button-hover flex items-center gap-2">
             <ArrowLeft className="w-4 h-4" />
-            Back to Main Site
+            Return to Main Site
           </Button>
         </Link>
       </div>
