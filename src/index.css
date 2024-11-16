@@ -4,23 +4,48 @@
  
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
     --radius: 0.75rem;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
+    background-image: radial-gradient(circle at top right, rgba(155, 135, 245, 0.1) 0%, transparent 40%),
+                     radial-gradient(circle at bottom left, rgba(255, 51, 153, 0.1) 0%, transparent 40%);
+    background-attachment: fixed;
   }
 }
 
 .glass-card {
-  @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-lg;
+  @apply bg-secondary/30 backdrop-blur-md border border-white/10 shadow-lg;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.neon-border {
+  @apply relative rounded-xl overflow-hidden;
+  &::before {
+    content: '';
+    @apply absolute inset-0;
+    background: linear-gradient(90deg, var(--tw-colors-neon-blue), var(--tw-colors-neon-purple));
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    padding: 1px;
+    border-radius: inherit;
+  }
 }
 
 .button-hover {
-  @apply transition-all duration-300 hover:scale-105;
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-primary/20;
+}
+
+.gradient-text {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-neon-blue via-primary to-neon-pink;
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, rgba(155, 135, 245, 0.2) 0%, rgba(255, 51, 153, 0.2) 100%);
 }

@@ -22,15 +22,20 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: "#0A0A0B",
+        foreground: "#FFFFFF",
         primary: {
           DEFAULT: "#9b87f5",
           foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#F3F4F6",
-          foreground: "#1A1F2C",
+          DEFAULT: "rgba(255, 255, 255, 0.1)",
+          foreground: "#FFFFFF",
+        },
+        neon: {
+          blue: "#00F0FF",
+          purple: "#FF00F5",
+          pink: "#FF3399",
         },
       },
       borderRadius: {
@@ -57,10 +62,19 @@ export default {
             opacity: "1",
           },
         },
+        glow: {
+          "0%, 100%": {
+            boxShadow: "0 0 20px rgba(155, 135, 245, 0.3)",
+          },
+          "50%": {
+            boxShadow: "0 0 30px rgba(155, 135, 245, 0.6)",
+          },
+        },
       },
       animation: {
         "fade-up": "fade-up 0.3s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
+        glow: "glow 2s ease-in-out infinite",
       },
     },
   },
