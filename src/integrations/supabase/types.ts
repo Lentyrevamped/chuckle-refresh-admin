@@ -38,8 +38,8 @@ export type Database = {
         }
         Insert: {
           isadmin?: boolean
-          password: string
-          username: string
+          password?: string
+          username?: string
         }
         Update: {
           isadmin?: boolean
