@@ -11,18 +11,21 @@ export type Database = {
     Tables: {
       jokes: {
         Row: {
+          display_order: number
           id: string
           isusergenerated: boolean | null
           punchline: string
           setup: string
         }
         Insert: {
+          display_order?: number
           id?: string
           isusergenerated?: boolean | null
           punchline: string
           setup: string
         }
         Update: {
+          display_order?: number
           id?: string
           isusergenerated?: boolean | null
           punchline?: string

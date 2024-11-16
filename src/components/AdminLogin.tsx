@@ -18,15 +18,17 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
     try {
       setIsLoading(true);
       const { isValid, isAdmin } = await validateUser(username, password);
-      if (isValid && isAdmin) {
-        onLogin(username);
-      } else {
+      
+      if (!isValid || !isAdmin) {
         toast({
-          title: "Invalid credentials",
-          description: "Please check your username and password",
+          title: "Access Denied",
+          description: "Only admin users can access this page",
           variant: "destructive",
         });
+        return;
       }
+      
+      onLogin(username);
     } catch (error) {
       toast({
         title: "Error",
@@ -44,7 +46,7 @@ export const AdminLogin = ({ onLogin }: AdminLoginProps) => {
         <div className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-2xl font-semibold tracking-tight">Admin Login</h2>
-            <p className="text-muted-foreground">Enter your credentials to continue</p>
+            <p className="text-muted-foreground">Enter your admin credentials to continue</p>
           </div>
           <div className="space-y-4">
             <Input

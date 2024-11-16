@@ -19,7 +19,7 @@ export const addUser = async (username: string, password: string, isAdmin: boole
 
   const { error } = await supabase
     .from('users')
-    .insert([{ username, password, isAdmin }]);
+    .insert([{ username, password, isadmin: isAdmin }]);
 
   if (error) throw error;
 };
@@ -27,14 +27,14 @@ export const addUser = async (username: string, password: string, isAdmin: boole
 export const validateUser = async (username: string, password: string): Promise<{ isValid: boolean; isAdmin: boolean }> => {
   const { data: user } = await supabase
     .from('users')
-    .select()
+    .select('isadmin')
     .eq('username', username)
     .eq('password', password)
     .single();
 
   return {
     isValid: !!user,
-    isAdmin: user?.isAdmin || false
+    isAdmin: user?.isadmin || false
   };
 };
 

@@ -5,19 +5,22 @@ export interface Joke {
   setup: string;
   punchline: string;
   isUserGenerated?: boolean;
+  display_order: number;
 }
 
 export const getRandomJoke = async (): Promise<Joke> => {
   const { data: jokes, error } = await supabase
     .from('jokes')
-    .select('*');
+    .select('*')
+    .order('display_order', { ascending: true });
 
   if (error) throw error;
   if (!jokes || jokes.length === 0) {
     return {
       id: '1',
       setup: "Why did the scarecrow win an award?",
-      punchline: "Because he was outstanding in his field!"
+      punchline: "Because he was outstanding in his field!",
+      display_order: 1
     };
   }
 
@@ -28,13 +31,14 @@ export const getRandomJoke = async (): Promise<Joke> => {
 export const getAllJokes = async (): Promise<Joke[]> => {
   const { data: jokes, error } = await supabase
     .from('jokes')
-    .select('*');
+    .select('*')
+    .order('display_order', { ascending: true });
 
   if (error) throw error;
   return jokes || [];
 };
 
-export const addJoke = async (joke: Omit<Joke, 'id'>) => {
+export const addJoke = async (joke: Omit<Joke, 'id' | 'display_order'>) => {
   const { error } = await supabase
     .from('jokes')
     .insert([joke]);
