@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { addJoke, getAllJokes, deleteJoke, type Joke } from "@/lib/jokes";
+import { Laugh, Plus, Trash2 } from "lucide-react";
 
 export const JokeManagement = () => {
   const [jokes, setJokes] = useState<Joke[]>([]);
@@ -66,10 +67,13 @@ export const JokeManagement = () => {
   };
 
   return (
-    <>
-      <div className="glass-card p-8 rounded-xl space-y-6">
+    <div className="space-y-8">
+      <div className="glass-card p-8 rounded-xl space-y-6 transform hover:scale-[1.01] transition-transform duration-200">
         <div className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight">Add New Joke</h2>
+          <div className="flex items-center gap-2">
+            <Laugh className="w-5 h-5 text-primary" />
+            <h2 className="text-2xl font-semibold tracking-tight">Add New Joke</h2>
+          </div>
           <p className="text-muted-foreground">Create a new joke to add to the collection</p>
         </div>
         <div className="space-y-4">
@@ -77,13 +81,16 @@ export const JokeManagement = () => {
             placeholder="Setup"
             value={setup}
             onChange={(e) => setSetup(e.target.value)}
+            className="bg-white/50"
           />
           <Input
             placeholder="Punchline"
             value={punchline}
             onChange={(e) => setPunchline(e.target.value)}
+            className="bg-white/50"
           />
           <Button onClick={handleAddJoke} className="w-full button-hover">
+            <Plus className="w-4 h-4 mr-2" />
             Add Joke
           </Button>
         </div>
@@ -91,33 +98,46 @@ export const JokeManagement = () => {
 
       <div className="glass-card p-8 rounded-xl space-y-6">
         <div className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight">Manage Jokes</h2>
+          <div className="flex items-center gap-2">
+            <Laugh className="w-5 h-5 text-primary" />
+            <h2 className="text-2xl font-semibold tracking-tight">Manage Jokes</h2>
+          </div>
           <p className="text-muted-foreground">View and delete existing jokes</p>
         </div>
         <div className="space-y-4">
           {jokes.map((joke) => (
             <div
               key={joke.id}
-              className={`p-4 ${joke.isUserGenerated ? 'bg-primary/10' : 'bg-secondary'} rounded-lg flex justify-between items-center`}
+              className={`p-6 ${joke.isUserGenerated ? 'bg-primary/5' : 'bg-secondary'} 
+                rounded-lg flex justify-between items-start gap-4 transform hover:scale-[1.01] 
+                transition-transform duration-200`}
             >
-              <div>
-                <p className="font-medium">{joke.setup}</p>
-                <p className="text-sm text-muted-foreground">{joke.punchline}</p>
-                {joke.isUserGenerated && (
-                  <span className="text-xs text-primary mt-1 block">Custom Joke</span>
-                )}
+              <div className="space-y-2">
+                <p className="font-medium text-lg">{joke.setup}</p>
+                <p className="text-muted-foreground">{joke.punchline}</p>
+                <div className="flex items-center gap-2">
+                  {joke.isUserGenerated && (
+                    <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">
+                      Custom Joke
+                    </span>
+                  )}
+                  <span className="text-xs px-2 py-1 rounded-full bg-secondary text-secondary-foreground">
+                    Order: {joke.display_order}
+                  </span>
+                </div>
               </div>
               <Button
                 variant="destructive"
+                size="icon"
                 onClick={() => handleDeleteJoke(joke.id)}
-                className="button-hover"
+                className="button-hover shrink-0"
               >
-                Delete
+                <Trash2 className="w-4 h-4" />
               </Button>
             </div>
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
